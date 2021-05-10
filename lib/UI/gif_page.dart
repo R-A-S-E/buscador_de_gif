@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 
+//statico só para vizualização do GIF
 class GifPage extends StatelessWidget {
   final Map _gifData;
 
@@ -12,6 +13,7 @@ class GifPage extends StatelessWidget {
         title: Text(_gifData["title"]),
         backgroundColor: Colors.black,
         actions: <Widget>[
+          //icone com função de compartilhar
           IconButton(
               icon: Icon(Icons.share),
               onPressed: () {
@@ -19,6 +21,7 @@ class GifPage extends StatelessWidget {
               })
         ],
       ),
+      //imagem do gif clicado
       backgroundColor: Colors.black,
       body: Center(
         child: Image.network(_gifData["images"]["fixed_height"]["url"]),

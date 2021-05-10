@@ -5,6 +5,7 @@ import 'package:buscador_de_gif/UI/gif_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:share/share.dart';
+//para adicionar a suavização do aparecimento do gif
 import 'package:transparent_image/transparent_image.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,9 +16,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String _search;
   int _offset = 0;
+  // listagem da API gif com procura e termo para utilizar a procura vazia
   Future<Map> _getGifs() async {
     http.Response response;
-
     if (_search == null || _search.isEmpty)
       response = await http.get(
           "https://api.giphy.com/v1/gifs/trending?api_key=whY9Im0ChOPuvXfadHYVCX6spiEeDOFY&limit=20&rating=g");
@@ -29,19 +30,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    _getGifs().then((map) {
-      print(map);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
+        //imagem tirada da intenert
         title: Image.network(
             "https://developers.giphy.com/branch/master/static/header-logo-8974b8ae658f704a5b48a2d039b8ad93.gif"),
         centerTitle: true,
@@ -51,6 +44,7 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.all(10.0),
+            //form para pesquisa e reset da quantidade pesquisada de gif
             child: TextField(
               decoration: InputDecoration(
                   labelText: "Pesquise aqui!",
@@ -67,6 +61,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Expanded(
+              //para mostrar icone carregando e retorna a função de widget
               child: FutureBuilder(
             future: _getGifs(),
             builder: (context, snapshot) {
@@ -95,6 +90,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //quantidade da GradView
   int _getCount(List data) {
     if (_search == null || _search.isEmpty) {
       return data.length;
@@ -103,6 +99,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  //função de widget gridVier
   Widget _createGifTable(BuildContext context, AsyncSnapshot snapshot) {
     return GridView.builder(
       padding: EdgeInsets.all(10.0),
@@ -111,17 +108,24 @@ class _HomePageState extends State<HomePage> {
         crossAxisSpacing: 10.0,
         mainAxisSpacing: 10.0,
       ),
+      //quantidade das grades
       itemCount: _getCount(snapshot.data["data"]),
+
       itemBuilder: (context, index) {
+        //if com função da listagem do botão para mostrar mais
         if (_search == null || index < snapshot.data["data"].length)
           return GestureDetector(
+            //para da suavização ao gif aparecendo na tela
             child: FadeInImage.memoryNetwork(
+              //suavização
               placeholder: kTransparentImage,
+              //Gif pesquisadas da API
               image: snapshot.data["data"][index]["images"]["fixed_height"]
                   ["url"],
               height: 300.0,
               fit: BoxFit.cover,
             ),
+            //manda para outra aba, para mostrar a imagem solo
             onTap: () {
               Navigator.push(
                   context,
@@ -129,12 +133,14 @@ class _HomePageState extends State<HomePage> {
                       builder: (context) =>
                           GifPage(snapshot.data["data"][index])));
             },
+            //compartilha o gif
             onLongPress: () {
               Share.share(snapshot.data["data"][index]["images"]["fixed_height"]
                   ["url"]);
             },
           );
         else
+          //depois dos gif adiciona o botão para carregar mais
           return Container(
             child: GestureDetector(
               child: Column(
@@ -151,6 +157,7 @@ class _HomePageState extends State<HomePage> {
                   )
                 ],
               ),
+              //adiciona mais 19 na base de pesquisa
               onTap: () {
                 setState(() {
                   _offset += 19;
