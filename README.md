@@ -13,4 +13,4 @@
 - Form - onSubmitted ✔️
 - FutureBuilder para Função de Widget ✔️
 - Quantidade de Widget por tela ✔️
-- Função Widget GridVier com suavização ✔️
+- Função Widget GridView com suavização ✔️
